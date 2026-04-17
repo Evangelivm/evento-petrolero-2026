@@ -1,26 +1,297 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --radius: 0.5rem;
+  --orange: #f97316;
+  --orange-glow: rgba(249, 115, 22, 0.35);
+  --navy-deep: #060b18;
+  --navy-dark: #0a1020;
+  --navy-mid: #0f1929;
+  --navy-card: #111c30;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: #060b18;
+  --color-foreground: hsl(0 0% 93%);
+  --color-card: #111c30;
+  --color-card-foreground: hsl(0 0% 93%);
+  --color-popover: #111c30;
+  --color-popover-foreground: hsl(0 0% 93%);
+  --color-primary: hsl(30 100% 50%);
+  --color-primary-foreground: hsl(0 0% 5%);
+  --color-secondary: #1a2a42;
+  --color-secondary-foreground: hsl(0 0% 88%);
+  --color-muted: #1a2a42;
+  --color-muted-foreground: hsl(0 0% 55%);
+  --color-accent: #1a2a42;
+  --color-accent-foreground: hsl(0 0% 88%);
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-input: rgba(255, 255, 255, 0.07);
+  --color-ring: #f97316;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--navy-deep);
+  color: var(--color-foreground);
+  font-feature-settings: "kern" 1, "liga" 1;
 }
+
+/* ─── TYPOGRAPHY ─────────────────────────────────────── */
+
+.section-title {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.section-title span {
+  background: linear-gradient(90deg, #f97316 0%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-subtitle {
+  color: #94a3b8;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+/* Orange underline accent */
+.accent-line {
+  display: block;
+  width: 48px;
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #f97316, #fbbf24);
+  margin: 14px auto 0;
+}
+
+/* ─── LAYOUT HELPERS ─────────────────────────────────── */
+
+.page-section {
+  position: relative;
+  padding-block: 3rem;
+  overflow: hidden;
+}
+
+.page-section-alt {
+  position: relative;
+  padding-block: 3rem;
+  overflow: hidden;
+  background: linear-gradient(180deg, #080e1c 0%, #0c1526 100%);
+}
+
+@media (min-width: 640px) {
+  .page-section,
+  .page-section-alt {
+    padding-block: 5rem;
+  }
+}
+
+/* ─── AMBIENT GLOW BLOBS ─────────────────────────────── */
+
+.glow-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-orange {
+  background: radial-gradient(circle, rgba(249,115,22,0.18) 0%, transparent 70%);
+}
+
+.glow-blue {
+  background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+}
+
+/* ─── GLASS CARDS ────────────────────────────────────── */
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-card:hover {
+  border-color: rgba(249, 115, 22, 0.3);
+  box-shadow: 0 8px 40px rgba(249, 115, 22, 0.12), 0 0 0 1px rgba(249,115,22,0.08);
+  transform: translateY(-2px);
+}
+
+/* Top orange accent stripe on cards */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f97316, transparent);
+  border-radius: 99px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.glass-card:hover::before {
+  opacity: 1;
+}
+
+/* ─── SPEAKER CARDS ──────────────────────────────────── */
+
+.speaker-card {
+  background: linear-gradient(160deg, #131f35 0%, #0c1628 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s;
+  position: relative;
+}
+
+.speaker-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(249,115,22,0.25);
+  border-color: rgba(249,115,22,0.25);
+}
+
+.speaker-card-footer {
+  padding: 1.1rem 1.25rem 1.25rem;
+  border-top: 1px solid rgba(249, 115, 22, 0.12);
+  background: linear-gradient(180deg, rgba(249,115,22,0.03) 0%, transparent 100%);
+}
+
+/* ─── FEATURE STRIP ──────────────────────────────────── */
+
+.feature-strip {
+  background: linear-gradient(90deg, #0c1628 0%, #111c30 50%, #0c1628 100%);
+  border-top: 1px solid rgba(249,115,22,0.15);
+  border-bottom: 1px solid rgba(249,115,22,0.15);
+}
+
+.feature-strip-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  flex: 1;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .feature-strip-item {
+    padding: 1.1rem 1.5rem;
+  }
+}
+
+.feature-strip-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(251,191,36,0.1));
+  border: 1px solid rgba(249,115,22,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─── CTA BANNER ─────────────────────────────────────── */
+
+.cta-banner {
+  background: linear-gradient(135deg, #7c2d12 0%, #9a3412 30%, #c2410c 60%, #ea580c 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+}
+
+/* ─── HERO ────────────────────────────────────────────── */
+
+.hero-gradient {
+  background: linear-gradient(
+    to right,
+    rgba(6, 11, 24, 0.92) 0%,
+    rgba(6, 11, 24, 0.70) 55%,
+    rgba(6, 11, 24, 0.20) 100%
+  ),
+  linear-gradient(
+    to top,
+    rgba(6, 11, 24, 0.95) 0%,
+    transparent 35%
+  );
+}
+
+/* ─── SPONSOR BADGES ─────────────────────────────────── */
+
+.sponsor-badge {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(249,115,22,0.2);
+  transition: box-shadow 0.3s, transform 0.3s;
+  overflow: hidden;
+}
+
+.sponsor-badge:hover {
+  box-shadow: 0 4px 24px rgba(249,115,22,0.15);
+  transform: translateY(-2px);
+}
+
+/* ─── AGENDA TABS ────────────────────────────────────── */
+
+.agenda-item {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 1rem 0;
+  transition: background 0.2s;
+}
+
+.agenda-item:last-child {
+  border-bottom: none;
+}
+
+.agenda-item:hover {
+  background: rgba(249,115,22,0.03);
+  border-radius: 8px;
+  padding-inline: 0.5rem;
+  margin-inline: -0.5rem;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--navy-deep); }
+::-webkit-scrollbar-thumb { background: rgba(249,115,22,0.4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(249,115,22,0.7); }
+
+.text-balance { text-wrap: balance; }

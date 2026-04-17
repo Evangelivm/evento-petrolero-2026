@@ -1,64 +1,2775 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  ChevronRight,
+  CheckCircle,
+  Download,
+  Loader2,
+  Menu,
+  X,
+} from "lucide-react";
+import RegistrationForm from "./components/registration-form";
+import { useState } from "react";
 
 export default function Home() {
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const generateProgramPDF = async () => {
+    setIsGeneratingPDF(true);
+
+    try {
+      // Importar dinámicamente jsPDF solo cuando se necesite
+      const { jsPDF } = await import("jspdf");
+      // @ts-ignore
+      const autoTable = (await import("jspdf-autotable")).default;
+
+      const doc = new jsPDF();
+
+      // Añadir encabezado
+      doc.setFillColor(245, 158, 11); // Color ámbar
+      doc.rect(0, 0, 210, 40, "F");
+
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(22);
+      doc.text("REACTIVA-PETROL 2025", 105, 15, { align: "center" });
+
+      doc.setFontSize(16);
+      doc.text("PROGRAMA COMPLETO DEL EVENTO", 105, 25, { align: "center" });
+      doc.setFontSize(12);
+      doc.text("12 - 14 de Agosto, 2025 | Talara - Perú", 105, 35, {
+        align: "center",
+      });
+
+      // Añadir subtítulo
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(14);
+      doc.text("Reactivación Petrolera en la Región Piura", 105, 50, {
+        align: "center",
+      });
+
+      // Día 1
+      doc.setFontSize(16);
+      doc.setTextColor(245, 158, 11); // Color ámbar
+      doc.text("Día 1: Innovación y Tecnología", 20, 65);
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.text("12 de Agosto, 2025", 20, 72);
+
+      // Tabla para el día 1
+      autoTable(doc, {
+        startY: 75,
+        head: [["Horario", "Actividad", "Ponente"]],
+        body: [
+          ["07:15 - 08:00", "Inscripción de participantes", ""],
+          [
+            "08:00 - 08:15",
+            "Palabras de Bienvenida",
+            "Luis Ernesto Neyra Leon, Gobernador Regional de Piura",
+          ],
+          [
+            "08:15 - 08:30",
+            "Inauguración del Foro",
+            "Dina Ercilla Boluarte Zegarra, Presidente de la Republica del Perú",
+          ],
+          [
+            "",
+            "BLOQUE 1: Plan Reactivacion Petrolera en 47 nuevas Areas E&P",
+            "",
+          ],
+          [
+            "08:30 - 08:50",
+            "Estabilidad Jurídica y Política para la Inversion en Hidrocarburos",
+            "Pedro Chira Fernandez, Presidente del Directorio PERUPETRO SA",
+          ],
+          [
+            "09:00 - 09:20",
+            "Proyecciones 2025-2030 Petroperú S.A",
+            "Alejandro Narvaez Liceras, Presidente del Directorio PETROPERU SA",
+          ],
+          [
+            "09:30 - 09:45",
+            "FLASH DE PRODUCCION: Anuncio inversiones en Cuenca Talara",
+            "",
+          ],
+          ["10:00 - 10:20", "COFFE BREACK", ""],
+          [
+            "10:30 - 10:50",
+            "Estrategias para Revitalización de Campos Maduros",
+            "Hugo Gustavo Pelilza, Consultor de Gestión en Petroleo y Gas",
+          ],
+          [
+            "11:00 - 11:20",
+            "Reactivacion Petrolera en 47 nuevas Areas Fase cero",
+            "Asaid Bandach Gallegos, Gerente Tecnico PERUPETRO SA",
+          ],
+          [
+            "11:20 - 12:30",
+            "Panel de comentarios",
+            "Manuel Farias (CAPPETROL), Tomas Díaz (Petroperu), Oscar Ferney (ACIPET), Segismundo Cruces (Gob. Tumbes). Moderador: Guillermo Morales (CIP Talara)",
+          ],
+          ["12:30 - 14:00", "ALMUERZO LIBRE", ""],
+          [
+            "14:00 - 14:20",
+            "El Agua en la industria de Hidrocarburos",
+            "Cesar Pabon Martínez, Ingeniero Senior Andes Operating Company",
+          ],
+          [
+            "14:20 - 14:40",
+            "Tema por confirmar",
+            "Ricardo Andres Sarmiento, CEO Estrella International Energy Services",
+          ],
+          [
+            "14:40 - 15:00",
+            "Soluciones Off Shore/On Shore: Izaje y Amarre",
+            "Ednaldo da Purificacao Silva, Director Tecnofextil",
+          ],
+          [
+            "15:00 - 15:20",
+            "Estrategias de Gestión para Reactivacion del Sector",
+            "Rafael Reyes Vivas, Ex Vice Ministro de Hidrocarburos",
+          ],
+          [
+            "15:20 - 15:40",
+            "Rol de Peruperto, Ejecutivo y Legislativo en Piura",
+            "Carlos Gonzales Avila, Director General Enerconsult",
+          ],
+          ["15:40 - 16:00", "COFFE BREACK", ""],
+          [
+            "16:00 - 16:20",
+            "Tema por confirmar",
+            "Efraín Gamarra Zegarra, Gerente General IMI Del Peru SAC",
+          ],
+          [
+            "16:20 - 17:30",
+            "PITCH COMERCIAL COMPAÑIAS PETROLERAS",
+            "Andes, Rodatech, Estrella, IMI, Axure, Transber",
+          ],
+        ],
+        theme: "grid",
+        styles: { fontSize: 10, cellPadding: 5 },
+        headStyles: { fillColor: [245, 158, 11], textColor: [255, 255, 255] },
+        columnStyles: { 0: { cellWidth: 30 } },
+        didParseCell: function (data) {
+          if (data.row.index === 3 && data.section === "body") {
+            data.cell.styles.fillColor = [229, 231, 235]; // bg-gray-200 equivalent
+            data.cell.styles.fontStyle = "bold";
+            data.cell.styles.halign = "center";
+          }
+        },
+      });
+
+      // Día 2
+      doc.setFontSize(16);
+      doc.setTextColor(245, 158, 11); // Color ámbar
+      doc.text(
+        "Día 2: Sostenibilidad y Medio Ambiente",
+        20,
+        doc.lastAutoTable.finalY + 20,
+      );
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.text("13 de Agosto, 2025", 20, doc.lastAutoTable.finalY + 27);
+
+      // Tabla para el día 2
+      autoTable(doc, {
+        startY: doc.lastAutoTable.finalY + 30,
+        head: [["Horario", "Actividad", "Ponente"]],
+        body: [
+          ["08:30 - 09:00", "Café de Bienvenida", ""],
+          [
+            "09:00 - 10:30",
+            "Conferencia: Reducción de Emisiones en Operaciones",
+            "Hugo G. Pelliza, YPF Argentina",
+          ],
+          [
+            "10:45 - 12:15",
+            "Panel: Estrategias ESG en el Sector Petrolero",
+            "Varios Ponentes",
+          ],
+          ["12:30 - 14:00", "Almuerzo Networking", ""],
+          [
+            "14:15 - 15:45",
+            "Taller: Certificaciones Ambientales",
+            "Equipo de Certificación, EcoOil",
+          ],
+          [
+            "16:00 - 17:30",
+            "Conferencia: Economía Circular en la Industria",
+            "Laura Vázquez, ALAP",
+          ],
+          ["17:45 - 19:00", "Cena de Gala (Solo para VIP)", ""],
+        ],
+        theme: "grid",
+        styles: { fontSize: 10, cellPadding: 5 },
+        headStyles: { fillColor: [245, 158, 11], textColor: [255, 255, 255] },
+        columnStyles: { 0: { cellWidth: 30 } },
+      });
+
+      // Día 3
+      doc.setFontSize(16);
+      doc.setTextColor(245, 158, 11); // Color ámbar
+      doc.text(
+        "Día 3: Mercados y Regulación",
+        20,
+        doc.lastAutoTable.finalY + 20,
+      );
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.text("14 de Agosto, 2025", 20, doc.lastAutoTable.finalY + 27);
+
+      // Tabla para el día 3
+      autoTable(doc, {
+        startY: doc.lastAutoTable.finalY + 30,
+        head: [["Horario", "Actividad", "Ponente"]],
+        body: [
+          ["08:30 - 09:00", "Café de Bienvenida", ""],
+          [
+            "09:00 - 10:30",
+            "Conferencia: Tendencias del Mercado Global",
+            "Analista Senior, PetroMarket",
+          ],
+          [
+            "10:45 - 12:15",
+            "Panel: Regulación y Políticas Energéticas",
+            "Representantes Gubernamentales",
+          ],
+          ["12:30 - 14:00", "Almuerzo Networking", ""],
+          [
+            "14:15 - 15:45",
+            "Taller: Estrategias de Inversión en el Sector",
+            "Consultores, Energy Capital",
+          ],
+          [
+            "16:00 - 17:00",
+            "Conferencia de Clausura",
+            "Director General, Ministerio de Energía",
+          ],
+          ["17:00 - 18:00", "Ceremonia de Clausura y Despedida", ""],
+        ],
+        theme: "grid",
+        styles: { fontSize: 10, cellPadding: 5 },
+        headStyles: { fillColor: [245, 158, 11], textColor: [255, 255, 255] },
+        columnStyles: { 0: { cellWidth: 30 } },
+      });
+
+      // Añadir pie de página
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text(
+          `Página ${i} de ${pageCount} - Reactiva-Petrol 2025: Reactivación Petrolera en la Región Piura`,
+          105,
+          doc.internal.pageSize.height - 10,
+          { align: "center" },
+        );
+      }
+
+      // Guardar el PDF
+      doc.save("Programa_ReactivaPetrol2025.pdf");
+    } catch (error) {
+      console.error("Error al generar el PDF:", error);
+      alert(
+        "Hubo un error al generar el PDF. Por favor, inténtelo de nuevo más tarde.",
+      );
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="flex min-h-screen flex-col bg-[#060b18]">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full bg-[#060b18]/95 backdrop-blur-md border-b border-white/5 shadow-[0_1px_30px_rgba(249,115,22,0.08)]">
+        <div className="container mx-auto px-4 sm:px-6 flex h-16 items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-2.5">
+            <div className="relative h-8 w-8 overflow-hidden rounded-full border-2 border-amber-400/70 shadow-[0_0_12px_rgba(251,191,36,0.3)] shrink-0">
+              <Image src="/oil-pump-logo.png" alt="Logo" width={32} height={32} className="object-cover w-8 h-8" />
+            </div>
+            <div className="leading-tight">
+              <span className="block text-[13px] sm:text-[15px] font-extrabold tracking-wide text-white uppercase">Reactiva-Petrol</span>
+              <span className="block text-[10px] font-semibold text-amber-400 tracking-widest uppercase">2026</span>
+            </div>
+          </div>
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-6">
+            {["Inicio","Ponentes","Agenda","Patrocinadores"].map((label, i) => (
+              <Link key={label} href={["#","#ponentes","#agenda","#patrocinadores"][i]}
+                className="text-[13px] font-medium text-slate-400 hover:text-white transition-colors relative group">
+                {label}
+                <span className="absolute -bottom-0.5 left-0 right-0 h-[2px] bg-amber-400 scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full" />
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            {/* Desktop CTA */}
+            <Button
+              className="hidden sm:flex bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-[13px] font-bold px-5 h-9 rounded-full shadow-[0_4px_16px_rgba(249,115,22,0.35)] hover:-translate-y-0.5 transition-all"
+              onClick={() => scrollToSection("inscripcion")}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Registrarme
+            </Button>
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Menú"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+
+        {/* Mobile menu drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-white/5 bg-[#060b18] px-4 pb-5 pt-3 space-y-1">
+            {["Inicio","Ponentes","Agenda","Patrocinadores"].map((label, i) => (
+              <Link key={label} href={["#","#ponentes","#agenda","#patrocinadores"][i]}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[14px] font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <ChevronRight className="h-4 w-4 text-amber-400" />
+                {label}
+              </Link>
+            ))}
+            <div className="pt-2">
+              <button
+                onClick={() => { scrollToSection("inscripcion"); setMobileMenuOpen(false); }}
+                className="w-full rounded-full bg-gradient-to-r from-orange-500 to-amber-500 py-3 text-[14px] font-bold text-white shadow-[0_4px_16px_rgba(249,115,22,0.4)]"
+              >
+                Registrarme
+              </button>
+            </div>
+          </div>
+        )}
+      </header>
+
+      <main className="flex-1">
+        {/* ── HERO ───────────────────────────────────────────── */}
+        <section className="relative min-h-[100svh] sm:min-h-[92vh] flex flex-col justify-end pb-0">
+          {/* Background image */}
+          <div className="absolute inset-0 z-0">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/hero-petroleum.png"
+              alt="Plataforma petrolera"
+              fill
+              className="object-cover"
+              style={{ filter: "brightness(0.28) saturate(1.1)" }}
+              priority
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="hero-gradient absolute inset-0" />
+            {/* Radial orange glow — bottom left */}
+            <div className="absolute bottom-0 left-0 w-[600px] h-[400px] glow-blob glow-orange opacity-60" />
+            {/* Bottom fade to page color */}
+            <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#060b18] to-transparent" />
+          </div>
+
+          {/* Content */}
+          <div className="container relative z-10 mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-10 sm:pb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+
+              {/* Left: texto */}
+              <div className="space-y-5 sm:space-y-7">
+                <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 backdrop-blur-sm">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+                  <span className="text-[11px] sm:text-[13px] font-semibold text-amber-300 tracking-wide">22 – 24 de Junio, 2026 · Iquitos, Perú</span>
+                </div>
+
+                <div>
+                  <p className="text-[11px] sm:text-[13px] uppercase tracking-[0.2em] text-slate-400 font-semibold mb-2">VII Evento TOP Petrolero</p>
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight text-white">
+                    EL EVENTO<br />
+                    <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 bg-clip-text text-transparent">
+                      LÍDER DE LA
+                    </span><br />
+                    INDUSTRIA
+                  </h1>
+                </div>
+
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                  Congreso Internacional — Reactivación Petrolera en las Regiones <strong className="text-white">Loreto y Ucayali</strong>. Impulsando inversión E&P en 34 áreas CET, reactivación de Lotes 39, 64, 67 y 192.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                  <button
+                    onClick={() => scrollToSection("inscripcion")}
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 text-[13px] sm:text-[14px] font-bold text-white shadow-[0_6px_24px_rgba(249,115,22,0.45)] hover:shadow-[0_8px_32px_rgba(249,115,22,0.6)] hover:-translate-y-0.5 transition-all"
+                  >
+                    REGÍSTRATE AHORA
+                  </button>
+                  <button
+                    onClick={() => scrollToSection("agenda")}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-[13px] sm:text-[14px] font-semibold text-white backdrop-blur-sm hover:bg-white/10 transition-all"
+                  >
+                    Ver Programa
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Right: flyer grande */}
+              <div className="flex justify-center lg:justify-end mt-4 lg:mt-0">
+                <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-none">
+                  <div className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-gradient-to-tr from-orange-500/25 to-amber-400/10 blur-3xl" />
+                  <Image
+                    src="flyer.webp"
+                    alt="Flyer del evento"
+                    width={700}
+                    height={900}
+                    className="relative rounded-2xl shadow-[0_40px_100px_rgba(0,0,0,0.7)] border border-white/10 w-full h-auto"
+                    priority
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* ── FEATURE STRIP ─────────────────────────────────── */}
+        <div className="feature-strip">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-2 sm:flex sm:flex-row divide-x divide-y sm:divide-y-0 divide-white/5">
+              {[
+                { icon: <Users className="h-5 w-5 text-amber-400" />, label: "Conferencias Magistrales", sub: "Expertos internacionales" },
+                { icon: <MapPin className="h-5 w-5 text-amber-400" />, label: "Área de Exposición", sub: "Empresas líderes del sector" },
+                { icon: <Calendar className="h-5 w-5 text-amber-400" />, label: "3 Días de Programa", sub: "22, 23 y 24 de Junio" },
+                { icon: <Clock className="h-5 w-5 text-amber-400" />, label: "Networking & Negocios", sub: "+300 profesionales" },
+              ].map((item) => (
+                <div key={item.label} className="feature-strip-item">
+                  <div className="feature-strip-icon">{item.icon}</div>
+                  <div>
+                    <p className="text-[13px] font-bold text-white">{item.label}</p>
+                    <p className="text-[11px] text-slate-500">{item.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+
+        {/* ── ACERCA ─────────────────────────────────────────── */}
+        <section id="acerca" className="page-section-alt">
+          {/* Ambient glow */}
+          <div className="glow-blob glow-orange absolute top-0 right-0 w-[500px] h-[400px] opacity-40" />
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="text-center mb-14">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">El Evento</p>
+              <h2 className="section-title">Acerca del <span>Congreso</span></h2>
+              <span className="accent-line" />
+              <p className="section-subtitle mt-5">
+                ReactivaPetrol 2026 reúne a los principales actores de la industria petrolera
+                para consensuar los desafíos actuales en 3 días de oportunidades de negocios.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+              {[
+                { icon: <Users className="h-6 w-6 text-amber-400" />, stat: "+300", label: "Asistentes", desc: "Profesionales y ejecutivos de alto nivel" },
+                { icon: <Calendar className="h-6 w-6 text-amber-400" />, stat: "3", label: "Días", desc: "Conferencias, talleres y networking" },
+                { icon: <MapPin className="h-6 w-6 text-amber-400" />, stat: "1", label: "Sede Única", desc: "Hotel Pacifico — Iquitos, Perú" },
+                { icon: <Clock className="h-6 w-6 text-amber-400" />, stat: "+40", label: "Horas", desc: "Contenido especializado del sector" },
+              ].map((item) => (
+                <div key={item.label} className="glass-card p-6 flex flex-col items-center text-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20 flex items-center justify-center">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="text-2xl sm:text-3xl font-black text-white">{item.stat}</p>
+                    <p className="text-[13px] font-bold text-amber-400 uppercase tracking-wide">{item.label}</p>
+                    <p className="text-[12px] text-slate-400 mt-1">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Imagen de Banner Responsivo */}
+        {/* <section className="w-full overflow-hidden flex justify-center bg-amber-500"> */}
+        {/* Desktop Image */}
+        {/* <div className="hidden md:block w-full max-w-[1600px]">
+            <Image
+              src="/prices_pc.webp"
+              alt="Banner Reactiva-Petrol (Desktop)"
+              width={1600}
+              height={584}
+              className="w-full h-auto object-contain"
+              priority
+            />
+          </div> */}
+        {/* Mobile Image */}
+        {/* <div className="md:hidden w-full">
+            <Image
+              src="/prices_phone.webp"
+              alt="Banner Reactiva-Petrol (Mobile)"
+              width={750}
+              height={1334}
+              className="w-full h-auto object-contain"
+              priority
+            />
+          </div>
+        </section> */}
+
+        {/* ── BENEFICIOS ─────────────────────────────────────── */}
+        <section id="beneficios" className="page-section">
+          <div className="glow-blob glow-blue absolute bottom-0 left-0 w-[500px] h-[350px] opacity-50" />
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="text-center mb-12">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Tu Inscripción Incluye</p>
+              <h2 className="section-title">Beneficios de <span>tu Entrada</span></h2>
+              <span className="accent-line" />
+            </div>
+            <div className="max-w-2xl mx-auto">
+              <ul className="grid gap-3 sm:grid-cols-2">
+                {[
+                  "Certificado de Participación",
+                  "Credenciales y Folletos",
+                  "Almuerzo Corporativo",
+                  "2 Coffee Break",
+                  "Networking con ejecutivos",
+                  "Acceso a la Zona VIP",
+                  "Cocktail y Fiesta de Cierre",
+                  "Videos del evento online",
+                ].map((item, idx) => (
+                  <li key={idx} className="glass-card flex items-center gap-3 px-5 py-3.5">
+                    <CheckCircle className="h-4.5 w-4.5 text-amber-400 shrink-0" />
+                    <span className="text-[14px] text-slate-200">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* ── PONENTES ───────────────────────────────────────── */}
+        <section id="ponentes" className="page-section-alt">
+          <div className="glow-blob glow-orange absolute top-0 right-0 w-[600px] h-[500px] opacity-30" />
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="text-center mb-14">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Speakers</p>
+              <h2 className="section-title">Ponentes <span>Destacados</span></h2>
+              <span className="accent-line" />
+              <p className="section-subtitle mt-5">
+                Líderes internacionales de la industria que compartirán conocimientos y experiencias.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {[
+                {
+                  name: "Adolfo Alfonso Hernandez",
+                  role: "President & Senior Remediation Specialist, Ivey International Inc.",
+                  image: "/alfonso_hernandez.webp",
+                  topic: "Taponamiento y Abandono de Pozos y Campos Petroleros",
+                  isSpecial: false,
+                  country: "México",
+                },
+                {
+                  name: "David Casas Castiblanco",
+                  role: "Gerente País PGER Services",
+                  image: "/casas_castiblanco.webp",
+                  topic: "La Visión de Petroleos Colombianos",
+                  isSpecial: false,
+                  country: "Colombia",
+                },
+                {
+                  name: "Mario del Pino",
+                  role: "Ing Geólogo de Exploración",
+                  image: "/del_pino.webp",
+                  topic: "Reactivemos la Exploración de Hidrocarburos en Perú",
+                  isSpecial: false,
+                  country: "Perú",
+                },
+                {
+                  name: "Jordan Henrique Gomes",
+                  role: "Gerente del Área de Ventas GreCon América Latina",
+                  image: "/gomes.webp",
+                  topic:
+                    "El Futuro de las Refinerias empieza hoy. El Poder de la Espectrometría en la Era de la Industria 4.0",
+                  isSpecial: false,
+                  country: "Brasil",
+                },
+                // {
+                //   name: "Ing. Rigoberto Rojas Gallo",
+                //   role: "Líder de Geociencias, Compañía Operadora GTG Petroleum",
+                //   image:
+                //     "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-06-12%20at%206.28.05%20PM-UnKcamSgX44mjzxml1TrlzvXocAeeN.jpeg",
+                //   topic:
+                //     "Importancia de la Administración Integral de Yacimientos en el Desarrollo de los Campos de Hidrocarburos",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Ing. César Pabon Martínez",
+                //   role: "Senior de Operaciones, Compañía Operadora Andes Operating Company",
+                //   image:
+                //     "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-06-13%20at%2012.23.29%20PM-WXhoyaZ8FZPOdGXdqWrRm8aFKZH6Xd.jpeg",
+                //   topic:
+                //     "El Agua, Agente Transformador en la Industria de los Hidrocarburos",
+                //   isSpecial: false,
+                //   country: "Colombia",
+                // },
+                // {
+                //   name: "Carlos Gonzales Ávila",
+                //   role: "Director General, Enerconsult SA",
+                //   image: "gonzalesavila.jpg",
+                //   topic:
+                //     "Nuevo Marco Legislativo para la Reactivación Petrolera de la Región Piura",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Dr.Eduardo Guevara Doods",
+                //   role: "Abogado, Socio de CMS Grau y ex Vice Ministro de Hidrocarburos",
+                //   image: "guevaradoods.jpg",
+                //   topic:
+                //     "Manejo Regulatorio para los Pasivos Ambientales en la Cuenca de Talara",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Daniel Hilario Villayonga",
+                //   role: "Magister, Director Regional de Energía y Minas del Goberino Regional de Tumbes",
+                //   image: "hilariovillayonga.webp",
+                //   topic:
+                //     "Reactivación de las Actividades de Hidrocarburos en la región Tumbes",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Oscar Díaz",
+                //   role: "CEO Viceversa Consulting SA",
+                //   image: "oscar_diaz.webp",
+                //   topic:
+                //     "Cómo prevenir Conflictos Sociales en el Sector Hidrocarburos",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Ing. Ricardo Sarmiento",
+                //   role: "CEO Estrella International Energy Services",
+                //   image: "ricardosarmiento.jpg",
+                //   topic: "Un Futuro Energético con Enfoque en Perú",
+                //   isSpecial: false,
+                //   country: "Colombia",
+                // },
+                // {
+                //   name: "Iván Miranda Zuzunaga",
+                //   role: "Magister Ingeneria de Petróleo y Consultor Internacional - IPIGPE",
+                //   image: "mirandazuzunaga.jpg",
+                //   topic:
+                //     "Oportunidades para acelerar la explotación de HC en el noroeste y la selva peruana dentro del proceso del cambio de la matriz energética",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Alexander Lopez Briceño",
+                //   role: "Ingeniero de Petroleos, Gerente de Perforación y Completamiento, Líder de Proyectos, Ingeniero Senior en Perforación Offshore y Onshore",
+                //   image: "lopezbri.jpg",
+                //   topic:
+                //     "Tecnología en Real Time Operacional, HSEQ, Toma de decisiones estrategicas para la industria petrolera",
+                //   isSpecial: false,
+                //   country: "Colombia",
+                // },
+                // {
+                //   name: "Ing. Ricardo Yam Camacho",
+                //   role: "Well Engineering & Project Management for the Enery Industry - Compañia Operadora SINS",
+                //   image: "yamcamacho.jpg",
+                //   topic:
+                //     "Pozos de Emergencia en Campos Maduros. Pauta para la Identificación de Áreas Potenciales con Reservas",
+                //   isSpecial: false,
+                //   country: "E.E.U.U.",
+                // },
+                // {
+                //   name: "Ing. Luis Alfonso Del Angel Calles",
+                //   role: "Compañía Operadora SINS",
+                //   image: "delangelcalles.jpg",
+                //   topic:
+                //     "La Nueva Frontera de la Prevención, Analisis de Riesgo enfocados en el cambio",
+                //   isSpecial: false,
+                //   country: "E.E.U.U.",
+                // },
+                // {
+                //   name: "Ing. Tomas Diaz del Águila",
+                //   role: "Gerente Corporativo Exploración Producción, Petroleos del Perú - Petroperú S.A",
+                //   image: "diazdelaguila.webp",
+                //   topic: "Integración Vertical Petroperú SA",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Ing. Gustavo Villa Mora",
+                //   role: "Gerente Operaciones Talara, Petroleos del Perú - Petroperú S.A",
+                //   image: "villamora.jpg",
+                //   topic:
+                //     "Rol Estrategico de la Refineria Talara en la Industria Oil & Gas del Perú",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Ing. Arturo Rodríguez Paredes",
+                //   role: "Gerente Corporativo Operaciones, Petroleos del Perú - Petroperú S.A",
+                //   image: "rodriguezparedes.jpg",
+                //   topic:
+                //     "Sinergias de la Nueva Refineria Talara en la Industria Oil & Gas del Perú",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Dr. Alejandro Narváez Liceras",
+                //   role: "Presidente del Directorio, Petroleos del Perú - Petroperú S.A",
+                //   image: "narvaezliceras.jpg",
+                //   topic: "Proyecciones 2025-2030 Petroperú S.A",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Hendrikus Bernardus Fokkink",
+                //   role: "Gerente de Cadena de Suministro para Ecuador, Colombia y Perú, SLB",
+                //   image: "bernardusfokkink.jpg",
+                //   topic:
+                //     "Estrategia Energetica SLB: Innovación, IA y Producción Inteligente",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Sergio Biedula",
+                //   role: "Gerente General",
+                //   image: "sergiobiedula.jpg",
+                //   topic:
+                //     "Remediacion Ambiental en Amazonia. Sinergia de Actores para Resultados Sostenibles",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Armando Torres Valenzuela",
+                //   role: "Gerente General, Estrella Petrolera del Perú",
+                //   image: "torresvalenzuela.jpg",
+                //   topic: "Seguridad de Procesos Basada en Riesgod en Upstream",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+
+                // {
+                //   name: "Oscar Vera Gargurevich",
+                //   role: "Gerente General, Petroleos del Peru - Petroperu S.A.",
+                //   image: "veragargurevich.jpg",
+                //   topic:
+                //     "Petroperu: Innovacion, Sostenibilidad y Estrategias para la Reactivacion del Sector Petrolero en el Peru",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+                // {
+                //   name: "Henry Pariguana",
+                //   role: "Jefe Seguridad Patrimonial, Petroleos del Peru - Petroperu S.A.",
+                //   image: "pariguana.jpg",
+                //   topic:
+                //     "Petroperu: Innovacion, Sostenibilidad y Estrategias para la Reactivacion del Sector Petrolero en el Peru",
+                //   isSpecial: false,
+                //   country: "Perú",
+                // },
+              ].map((speaker, index) => (
+                <div key={index} className="speaker-card group">
+                  <div className="relative w-full overflow-hidden">
+                    <Image
+                      src={speaker.image || "/placeholder.svg"}
+                      alt={speaker.name}
+                      width={400}
+                      height={300}
+                      className="w-full h-auto object-contain group-hover:scale-[1.03] transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c1628] via-transparent to-transparent" />
+                    {/* Country badge */}
+                    <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm border border-white/10 rounded-full px-2.5 py-1 text-[11px] font-semibold text-slate-300">
+                      {speaker.country}
+                    </div>
+                  </div>
+                  <div className="speaker-card-footer">
+                    <h3 className="text-[15px] font-bold text-white leading-tight">{speaker.name}</h3>
+                    <p className="text-amber-400 text-[12px] mt-1 font-medium">{speaker.role}</p>
+                    <p className="text-[12px] text-slate-400 mt-2 leading-relaxed">
+                      <span className="text-slate-300 font-medium">Tema: </span>{speaker.topic}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-10"></div>
+          </div>
+        </section>
+
+        {/* Maestro de Ceremonia */}
+        <section id="maestro-ceremonia" className="page-section">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Presentador Oficial</p>
+              <h2 className="section-title">Maestro de <span>Ceremonia</span></h2>
+              <span className="accent-line" />
+            </div>
+
+            <div className="flex justify-center">
+              <div className="max-w-md">
+                <div className="speaker-card group">
+                  <div className="relative w-full">
+                    <Image
+                      src="presentador.webp"
+                      alt="Oscar Díaz - Maestro de Ceremonia"
+                      width={400}
+                      height={300}
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+                  <div className="p-5 border-t border-amber-500/10">
+                    <h3 className="text-xl font-bold text-white">{`Oscar Díaz`}</h3>
+                    <p className="text-amber-400 text-sm mt-1">
+                      Director Programa TV Tierra Adentro
+                    </p>
+                    <p className="text-sm text-gray-400 mt-2">
+                      <span className="font-medium text-gray-300">Rol:</span> Maestro de
+                      Ceremonia
+                    </p>
+                    <p className="text-sm text-gray-400 mt-1">
+                      <span className="font-medium text-gray-300">País:</span> Perú
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── AGENDA ─────────────────────────────────────────── */}
+        <section id="agenda" className="page-section">
+          <div className="glow-blob glow-blue absolute top-0 left-0 w-[400px] h-[400px] opacity-40" />
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="text-center mb-14">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Programa</p>
+              <h2 className="section-title">Agenda del <span>Evento</span></h2>
+              <span className="accent-line" />
+              <p className="section-subtitle mt-5">
+                Tres días de contenido especializado para profesionales del sector petrolero.
+              </p>
+            </div>
+
+            <Tabs defaultValue="dia1" className="max-w-4xl mx-auto">
+              <TabsList className="grid w-full grid-cols-3 mb-8">
+                <TabsTrigger value="dia1">Día 12 de Agosto</TabsTrigger>
+                <TabsTrigger value="dia2">Día 13 de Agosto</TabsTrigger>
+                <TabsTrigger value="dia3">Día 14 de Agosto</TabsTrigger>
+              </TabsList>
+
+              <TabsContent
+                value="dia1"
+                className="border border-slate-700 rounded-lg p-6 shadow-sm bg-slate-800/60"
+              >
+                <h3 className="text-xl font-bold mb-4">
+                  Día 1: Innovación y Tecnología
+                </h3>
+                <div className="space-y-6">
+                  {[
+                    {
+                      time: "07:15 - 08:00",
+                      title: "Inscripción de participantes",
+                      speaker: "",
+                    },
+                    {
+                      time: "08:00 - 08:15",
+                      title: "Palabras de Bienvenida",
+                      speaker:
+                        "Luis Ernesto Neyra Leon, Gobernador Regional de Piura",
+                    },
+                    {
+                      time: "08:15 - 08:30",
+                      title: "Inauguración del Foro",
+                      speaker:
+                        "Dina Ercilla Boluarte Zegarra, Presidente de la Republica del Perú",
+                    },
+                    {
+                      time: "",
+                      title:
+                        "BLOQUE 1: Plan Reactivacion Petrolera en 47 nuevas Areas E&P",
+                      speaker: "",
+                    },
+                    {
+                      time: "08:30 - 08:50",
+                      title:
+                        "Hidrocarburos: Desafios para impulsar la actividad exploratoria en el Perú",
+                      speaker:
+                        "Pedro Chira Fernandez, Presidente del Directorio PERUPETRO SA",
+                    },
+                    {
+                      time: "09:00 - 09:20",
+                      title: "Proyecciones 2025-2030 Petroperú S.A",
+                      speaker:
+                        "Alejandro Narvaez Liceras, Presidente del Directorio PETROPERU SA",
+                    },
+                    {
+                      time: "09:30 - 09:45",
+                      title:
+                        "FLASH DE PRODUCCION: Anuncio Nacional Inversiones en Cuenca Talara Ingresa a Perú un nuevo actor E&P",
+                      speaker: "",
+                    },
+                    {
+                      time: "10:00 - 10:20",
+                      title: "Coffee Break",
+                      speaker: "",
+                    },
+                    {
+                      time: "10:30 - 10:50",
+                      title:
+                        "Estrategias para la Revitalización de Campos Maduros",
+                      speaker:
+                        "Hugo Gustavo Pelilza, Consultor de Gestión en Petroleo y Gas - CAPPETROL Argentina",
+                    },
+                    {
+                      time: "11:00 - 11:20",
+                      title: "Potencial Hidrocarburifero del Peru ",
+                      speaker:
+                        "Asaid Bandach Gallegos, Gerente Tecnico y de Recursos de Información PERUPETRO SA Perú",
+                    },
+                    {
+                      time: "11:30 - 12:15",
+                      title: "Panel de comentarios",
+                      panelists: [
+                        "Oscar Vera Gargurevich, Gerente General, Petroperu SA",
+                        "Eduardo La Torre, Director de Permisos, Regulatoria CAPPETROL",
+                        "Gabby Julca, Directora Regional de Energia y Minas, Piura",
+                        "Daniel Hilario, Director Regional de Energia y Minas, Tumbes",
+                      ],
+                      moderator:
+                        "Guillermo Morales, Presidente CIP - Comite Talara",
+                    },
+                    {
+                      time: "12:15 - 14:00",
+                      title: "Almuerzo Libre",
+                      speaker: "",
+                    },
+                    {
+                      time: "14:00 - 14:20",
+                      title:
+                        "Pozos de Emergencia en Campos Maduros. Pauta para la identificacion de Areas Potenciales con Reservas",
+                      speaker:
+                        "Ricardo Yam Camacho, Project Management Compañia Operadora SINS - EEUU",
+                    },
+                    {
+                      time: "14:30 - 14:50",
+                      title: "Tema a exponer (RESERVADO)",
+                      speaker:
+                        "Arturo Rodriguez Paredes, Gerente Corporativo Operaciones Compañía Operadora Petroleos del Perú -  PETROPERU SA - Perú",
+                    },
+                    {
+                      time: "15:00 - 15:20",
+                      title: "Un Futuro Energético con Enfoque en Perú",
+                      speaker:
+                        "Ricardo Andres Sarmiento, CEO Estrella International Energy Services (Argentina)",
+                      id: "peru-energy",
+                    },
+                    // {
+                    //   time: "15:00 - 15:20",
+                    //   title:
+                    //     "Reactivación de las Actividades de Hidrocarburos en la Región Tumbes",
+                    //   speaker:
+                    //     "Daniel Hilario Villayonga, Director Regional de Energia y Minas (Perú)",
+                    //   id: "tumbes-reactivation",
+                    // },
+                    {
+                      time: "14:50 - 15:00",
+                      title: "Un Futuro Energético con Enfoque en Perú",
+                      speaker:
+                        "Ricardo Andres Sarmiento, CEO Estrella International Energy Services (Argentina)",
+                    },
+                    {
+                      time: "15:00 - 15:20",
+                      title:
+                        "Tecnologia en Real Time Operacional, HSEQ, Toma de decisiones estrategicas para la Industria Petrolera",
+                      speaker:
+                        "Alexander Lopez Briceño, Gerente de Perforacion y Completacion de Pozos (Colombia)",
+                    },
+                    {
+                      time: "15:30 - 15:50",
+                      title:
+                        "Soluciones para el Mercado Off Shore y On Shore para Izaje y Amarre de Cargas",
+                      speaker:
+                        "Ednaldo da Purificacao Silva, Director y Conferencista Tecnotextil IND e COM (Brasil)",
+                    },
+                    {
+                      time: "16:00 - 16:20",
+                      title: "Coffee Break",
+                      speaker: "",
+                    },
+                    {
+                      time: "16:30 - 16:50",
+                      title:
+                        "Reactivacion de las Actividades de Hidrocarburos en la Region Tumbes",
+                      speaker:
+                        "Daniel Hilario Villayonga, Director Regional de Energia y Minas - Perú",
+                    },
+                    {
+                      time: "17:00 - 18:00",
+                      title: "PITCH COMERCIAL COMPAÑIAS PETROLERAS",
+                      speaker:
+                        "Andes Operating Company, SINS, Estrella Petrolera, Petrodynamic, Transber",
+                    },
+                  ].map((item, index, array) => {
+                    // Check if this is the first of the two concurrent items
+                    if (item.id === "peru-energy") {
+                      const nextItem = array[index + 1]; // Get the next item
+                      if (nextItem && nextItem.id === "tumbes-reactivation") {
+                        return (
+                          <div
+                            key={index}
+                            className="flex border-b border-slate-700 pb-4 last:border-0 last:pb-0"
+                          >
+                            <div className="w-32 flex-shrink-0 font-medium text-amber-600">
+                              {item.time}
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                              {/* First concurrent item */}
+                              <div className="md:border-r md:border-slate-600 md:pr-4">
+                                <h4 className="font-bold">{item.title}</h4>
+                                {item.speaker && (
+                                  <p className="text-gray-400 text-sm">
+                                    {item.speaker}
+                                  </p>
+                                )}
+                              </div>
+                              {/* Second concurrent item */}
+                              <div className="md:pl-4">
+                                <h4 className="font-bold">{nextItem.title}</h4>
+                                {nextItem.speaker && (
+                                  <p className="text-gray-400 text-sm">
+                                    {nextItem.speaker}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    } else if (item.id === "tumbes-reactivation") {
+                      // If this is the second concurrent item, it's already rendered by the first one, so skip it.
+                      return null;
+                    }
+                    // Handle the "BLOQUE 1" item
+                    else if (
+                      item.title ===
+                      "BLOQUE 1: Plan Reactivacion Petrolera en 47 nuevas Areas E&P"
+                    ) {
+                      return (
+                        <div
+                          key={index}
+                          className="w-full text-center bg-slate-700 py-4 rounded-md shadow-sm"
+                        >
+                          <h4 className="font-bold text-lg text-gray-200">
+                            {item.title}
+                          </h4>
+                        </div>
+                      );
+                    }
+                    // Handle all other regular items
+                    else {
+                      return (
+                        <div
+                          key={index}
+                          className="flex border-b border-slate-700 pb-4 last:border-0 last:pb-0"
+                        >
+                          <div className="w-32 flex-shrink-0 font-medium text-amber-600">
+                            {item.time}
+                          </div>
+                          <div>
+                            <h4 className="font-bold">{item.title}</h4>
+
+                            {item.speaker && (
+                              <p className="text-gray-400 text-sm">
+                                {item.speaker}
+                              </p>
+                            )}
+
+                            {/* Renderizado especial para el panel */}
+                            {item.title === "Panel de comentarios" && (
+                              <div className="text-gray-400 text-sm mt-2">
+                                <div className="font-semibold mb-1">
+                                  Panelistas:
+                                </div>
+                                <ul className="list-disc pl-5 space-y-1">
+                                  {item.panelists?.map((panelist, idx) => (
+                                    <li key={idx}>{panelist}</li>
+                                  ))}
+                                </ul>
+                                <div className="font-semibold mt-2">
+                                  Moderador:
+                                </div>
+                                <p>{item.moderator}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+              </TabsContent>
+
+              <TabsContent
+                value="dia2"
+                className="border border-slate-700 rounded-lg p-6 shadow-sm bg-slate-800/60"
+              >
+                <h3 className="text-xl font-bold mb-4">
+                  Día 2: Sostenibilidad y Medio Ambiente
+                </h3>
+                <div className="space-y-6">
+                  {[
+                    {
+                      time: "07:15 - 07:50",
+                      title: "Inscripcion de Participantes",
+                    },
+                    {
+                      time: "07:50 - 08:10",
+                      title: "Tema a exponer (RESERVADO)",
+                      speaker:
+                        "Gustavo Villa Mora, Gerente Operaciones Talara Compañia Operadora Petroleos del Peru - PETROPERU SA - Peru",
+                    },
+                    {
+                      time: "08:10 - 08:30",
+                      title:
+                        "Estrategias de Gestion para la Reactivacion del Sector Hidrocarburos",
+                      speaker:
+                        "Rafael Reyes Vivas, Ex Vicemistro de Hidrocarburos del MINEM - Peru",
+                    },
+                    {
+                      time: "",
+                      title: "BLOQUE 2: Remediacion Ambiental en 3265 Pasivos",
+                      speaker: "",
+                    },
+                    {
+                      time: "08:30 - 09:10",
+                      title:
+                        "Surfactant Exhanced In - Situ and Ex In - Situ, Remediation of Petroleum and Chlorinated Contaminated Soil and Groundwater To site Closure",
+                      speaker:
+                        "George (Bud), President & Remediation Specialist IVEY INTERNATIONAL - Canada",
+                    },
+                    {
+                      time: "09:10 - 09:30",
+                      title: "Tema a exponer (RESERVADO)",
+                      speaker: "Expositor por definir, Tema Litoclean - Peru",
+                    },
+                    {
+                      time: "09:30 - 10:00",
+                      title:
+                        "Manejo regulatorio para el manejo de pasivos ambientales en la Cuenca de Talara",
+                      speaker:
+                        "Eduardo Guevara Doods, Ex Vicemistro de Hidrocarburos del MINEM - Peru",
+                    },
+                    {
+                      time: "10:00 - 10:20",
+                      title: "Coffee Break",
+                      speaker: "",
+                    },
+                    {
+                      time: "10:30 - 10:00",
+                      title: "Integracion Vertical PETROPERU SA",
+                      speaker:
+                        "Tomas Diaz Del Aguila, Gerente Corporativo Exploracion y Produccion Compañia Operadora Petroleos del Peru - PETROPERU SA - Peru",
+                    },
+                    {
+                      time: "11:00 - 11:20",
+                      title:
+                        "Como prevenir conflictos sociales en el Sector Hidrocrburos",
+                      speaker:
+                        "Oscar Diaz Moscoso, CEO Viceversa Consulting SA - Peru",
+                    },
+                    {
+                      time: "11:30 - 12:15",
+                      title: "Tema a exponer (RESERVADO)",
+                      speaker:
+                        "Armando Torres Valenzuela, General Manager Peru, Estrella International Energy Services Ltd -  Colombia",
+                    },
+                    {
+                      time: "12:15 - 14:00",
+                      title: "Almuerzo Libre",
+                      speaker: "",
+                    },
+                    {
+                      time: "14:00 - 14:20",
+                      title:
+                        "El Agua, agente transformador de la Industria de los Hidrocarburos",
+                      speaker:
+                        "Cesar Pabon Martinez, Ingeniero Senior de Operaciones, Compañia Operadora Andes Operating Company Llc -  Colombia",
+                    },
+                    {
+                      time: "15:00 - 15:20",
+                      title:
+                        "El Rol de Perupetro, el Ejecutivo y el Legislativo en la Reactivacion Petrolera de la Region Piura",
+                      speaker:
+                        "Carlos Gonzales Avila, Director General Enerconsult SA - Peru",
+                      id: "peru-energy",
+                    },
+                    {
+                      time: "15:00 - 15:20",
+                      title:
+                        "Oportunidades para acelerar la Explotacion de Hidrocarburos en el Noroeste y la Selva Peruana dentro del proceso del cambio de la matriz energetica",
+                      speaker: "Ivan Miranda Zuzunaga, Consultor E&P - Peru",
+                      id: "tumbes-reactivation",
+                    },
+                    {
+                      time: "15:30 - 15:50",
+                      title: "Tema a exponer (RESERVADO)",
+                      speaker:
+                        "Tomas Diaz Del Aguila, Jose Chuna Alburqueque Gerente Corporativo, BA Servicios Ambientales SA - Peru",
+                    },
+                    {
+                      time: "16:00 - 16:20",
+                      title: "Coffee Break",
+                      speaker: "",
+                    },
+                    {
+                      time: "16:30 - 16:50",
+                      title:
+                        "Visita Guiada a Refineria Talara - PETROPERU SA (Inversionistas Extranjeros",
+                      speaker: "",
+                    },
+                    {
+                      time: "17:00 - 18:00",
+                      title: "PITCH COMERCIAL COMPAÑIAS PETROLERAS",
+                      speaker:
+                        "Petroperu, Rodatech, Axure Technologies, Climber World, Tema Litoclean",
+                    },
+                  ].map((item, index, array) => {
+                    // Check if this is the first of the two concurrent items
+                    if (item.id === "peru-energy") {
+                      const nextItem = array[index + 1]; // Get the next item
+                      if (nextItem && nextItem.id === "tumbes-reactivation") {
+                        return (
+                          <div
+                            key={index}
+                            className="flex border-b border-slate-700 pb-4 last:border-0 last:pb-0"
+                          >
+                            <div className="w-32 flex-shrink-0 font-medium text-amber-600">
+                              {item.time}
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                              {/* First concurrent item */}
+                              <div className="md:border-r md:border-slate-600 md:pr-4">
+                                <h4 className="font-bold">{item.title}</h4>
+                                {item.speaker && (
+                                  <p className="text-gray-400 text-sm">
+                                    {item.speaker}
+                                  </p>
+                                )}
+                              </div>
+                              {/* Second concurrent item */}
+                              <div className="md:pl-4">
+                                <h4 className="font-bold">{nextItem.title}</h4>
+                                {nextItem.speaker && (
+                                  <p className="text-gray-400 text-sm">
+                                    {nextItem.speaker}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    } else if (item.id === "tumbes-reactivation") {
+                      // If this is the second concurrent item, it's already rendered by the first one, so skip it.
+                      return null;
+                    }
+                    // Handle the "BLOQUE 1" item
+                    else if (
+                      item.title ===
+                      "BLOQUE 2: Remediacion Ambiental en 3265 Pasivos"
+                    ) {
+                      return (
+                        <div
+                          key={index}
+                          className="w-full text-center bg-slate-700 py-4 rounded-md shadow-sm"
+                        >
+                          <h4 className="font-bold text-lg text-gray-200">
+                            {item.title}
+                          </h4>
+                        </div>
+                      );
+                    }
+                    // Handle all other regular items
+                    else {
+                      return (
+                        <div
+                          key={index}
+                          className="flex border-b border-slate-700 pb-4 last:border-0 last:pb-0"
+                        >
+                          <div className="w-32 flex-shrink-0 font-medium text-amber-600">
+                            {item.time}
+                          </div>
+                          <div>
+                            <h4 className="font-bold">{item.title}</h4>
+
+                            {item.speaker && (
+                              <p className="text-gray-400 text-sm">
+                                {item.speaker}
+                              </p>
+                            )}
+
+                            {/* Renderizado especial para el panel
+                            {item.title === "Panel de comentarios" && (
+                              <div className="text-gray-400 text-sm mt-2">
+                                <div className="font-semibold mb-1">
+                                  Panelistas:
+                                </div>
+                                <ul className="list-disc pl-5 space-y-1">
+                                  {item.panelists?.map((panelist, idx) => (
+                                    <li key={idx}>{panelist}</li>
+                                  ))}
+                                </ul>
+                                <div className="font-semibold mt-2">
+                                  Moderador:
+                                </div>
+                                <p>{item.moderator}</p>
+                              </div>
+                            )} */}
+                          </div>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+              </TabsContent>
+
+              <TabsContent
+                value="dia3"
+                className="border border-slate-700 rounded-lg p-6 shadow-sm bg-slate-800/60"
+              >
+                <h3 className="text-xl font-bold mb-4">
+                  Día 3: Mercados y Regulación
+                </h3>
+                <div className="space-y-6">
+                  {[
+                    {
+                      time: "07:15 - 07:50",
+                      title: "Inscripción de participantes",
+                    },
+                    {
+                      time: "07:50 - 08:10",
+                      title:
+                        "La nueva frontera de la prevencion, analisis de riesgo enfocados en el cambio",
+                      speaker:
+                        "Luis Alfonso Del Angel Calles, QHSE Manager, Compañia Operadora SINS - EEUU",
+                    },
+                    {
+                      time: "08:10 - 08:30",
+                      title: "Tema a exponer (RESERVADO)",
+                      speaker:
+                        "Henry Antonio Pariguana Guerrero, Jefe Seguridad e Higiene Industrial y Seguridad Patrimonial, Compañia Operadora Petroleos del Peru - PETROPERU SA - Peru ",
+                    },
+                    {
+                      time: "08:30 - 08:50",
+                      title: "Tema a exponer (RESERVADO)",
+                      speaker:
+                        "Oscar Ferney Rncon Silva, Director Ejecutivo, ACIPET Asociacion Colombiana de Ingenieros de Petroleos, Energia y Tecnologias Afines - Colombia",
+                    },
+                    {
+                      time: "09:00 - 09:20",
+                      title:
+                        "Importancia de la Administracion Integral de Yacimientos en el desarrollo de los Campos de Hidrocarburos",
+                      speaker:
+                        "Rigoberto Rojas Gallo, Lider de Geociencias, Compañia de Servicios Petroleros PRECO SAC - Peru",
+                    },
+                    { time: "09:30 - 09:45", title: "Ponencia Reservada" },
+                    { time: "10:00 - 10:20", title: "Coffee Break" },
+                    {
+                      time: "10:30 - 12:15",
+                      title:
+                        "Visita Guiada a Refineria Talara - Petroperu SA (Inversionistas Extranjeros, Patrocinadores Internacionales y Auspiciadores Nacionales Total 30 PAX)",
+                    },
+                    { time: "12:15 - 14:00", title: "Almuerzo Libre" },
+                    {
+                      time: "14:00 - 14:20",
+                      title: "Ponencia Reservada Olympic Peru",
+                    },
+                    {
+                      time: "14:30 - 14:50",
+                      title: "Ponencia Reservada Dorf Ketal",
+                    },
+                    {
+                      time: "15:30 - 15:50",
+                      title: "Ponencia Reservada IMI Del Peru",
+                    },
+                    {
+                      time: "16:00 - 16:20",
+                      title: "Pitch Comercial Cosmos Agencia Maritima",
+                    },
+                    {
+                      time: "16:30 - 16:50",
+                      title: "Pitch Comercial Transportes Romero",
+                    },
+                    {
+                      time: "17:00 - 18:00",
+                      title:
+                        "Pitch Comercial Compañias Petroleras (Murgisa, IGL, San Jose Obrero, Nexell Corporation, Towers Consulting)",
+                    },
+                    { time: "18:00 - 18:15", title: "Cocktail de Clausura" },
+                  ].map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex border-b border-slate-700 pb-4 last:border-0 last:pb-0"
+                    >
+                      <div className="w-32 flex-shrink-0 font-medium text-amber-600">
+                        {item.time}
+                      </div>
+                      <div>
+                        <h4 className="font-bold">{item.title}</h4>
+                        {item.speaker && (
+                          <p className="text-gray-400 text-sm">
+                            {item.speaker}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+
+            {/* <div className="flex justify-center mt-10">
+              <Button
+                className="bg-amber-600 hover:bg-amber-700 flex items-center justify-center gap-2 mx-auto"
+                onClick={generateProgramPDF}
+                disabled={isGeneratingPDF}
+              >
+                {isGeneratingPDF ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Generando PDF...
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-4 w-4" />
+                    Descargar Programa Completo (PDF)
+                  </>
+                )}
+              </Button>
+            </div> */}
+          </div>
+        </section>
+
+        {/* ── CTA BANNER ─────────────────────────────────────── */}
+        <div id="inscripcion" className="cta-banner py-10 sm:py-14">
+          <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center">
+            <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-orange-200 font-semibold mb-2 sm:mb-3">Cupos Limitados</p>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 sm:mb-4 leading-tight px-2">
+              ¡INSCRÍBETE HOY Y ASEGURA TU LUGAR EN EL EVENTO!
+            </h2>
+            <p className="text-orange-100/80 text-sm sm:text-base mb-6 sm:mb-8 max-w-xl mx-auto px-2">
+              El evento más importante del sector energético de la Amazonía Peruana.
+            </p>
+            <a
+              href="mailto:info@reactivapetrol.com"
+              className="inline-flex items-center gap-2 rounded-full bg-white text-orange-600 font-black text-[14px] sm:text-[15px] px-6 sm:px-8 py-3 sm:py-4 shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all"
+            >
+              REGÍSTRATE AHORA
+              <ChevronRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+
+        {/* ── ORGANIZA ───────────────────────────────────────── */}
+        <section id="organiza" className="page-section-alt">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Organizadores</p>
+              <h2 className="section-title"><span>Organiza</span></h2>
+              <span className="accent-line" />
+              <p className="section-subtitle mt-5">
+                Entidades organizadoras del evento Reactiva-Petrol 2026.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+              {/* Primer organizador */}
+              <div className="glass-card p-6 w-full">
+                <div className="flex flex-col items-center gap-6">
+                  <div className="w-full flex justify-center">
+                    <div className="relative w-40 h-40 overflow-hidden">
+                      <Image
+                        src="/tyl.jpg"
+                        alt="T&L del Oriente - Energía Total"
+                        width={160}
+                        height={160}
+                        className="object-contain"
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full text-center">
+                    <h3 className="text-xl font-bold mb-2">T&L del Oriente</h3>
+                    <p className="text-gray-400 mb-4">
+                      Entidad líder en la promoción y desarrollo del sector
+                      petrolero en la región Piura.
+                    </p>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      <Button
+                        variant="outline"
+                        className="border-amber-500 text-amber-400 hover:bg-amber-900/30"
+                      >
+                        <Link href="#" className="flex items-center gap-2">
+                          Conocer más
+                          <ChevronRight className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Segundo organizador */}
+              <div className="glass-card p-6 w-full">
+                <div className="flex flex-col items-center gap-6">
+                  <div className="w-full flex justify-center">
+                    <div className="relative w-40 h-40 overflow-hidden">
+                      <Image
+                        src="/cap.png"
+                        alt="CAPPETROL - Cámara Peruana de Petróleo"
+                        width={160}
+                        height={160}
+                        className="object-contain"
+                        priority
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full text-center">
+                    <h3 className="text-xl font-bold mb-2">CAPPETROL</h3>
+                    <p className="text-gray-400 mb-4">
+                      Cámara Peruana de Petróleo, institución comprometida con
+                      el desarrollo del sector petrolero nacional.
+                    </p>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      <Button
+                        variant="outline"
+                        className="border-amber-500 text-amber-400 hover:bg-amber-900/30"
+                      >
+                        <Link href="#" className="flex items-center gap-2">
+                          Conocer más
+                          <ChevronRight className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Inscripción Duplicada */}
+        {/* <section id="inscripcion-2" className="py-16 bg-slate-800 text-white">
+          <div className="container">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">
+                INSCRÍBETE COMO PATROCINADOR
+              </h2>
+              <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+                Asegura tu lugar en el evento más importante del sector
+                petrolero en Latinoamérica.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+              <div className="space-y-8">
+                <div className="bg-slate-700 p-6 rounded-lg">
+                  <h3 className="text-2xl font-bold mb-4">¿Por qué asistir?</h3>
+                  <ul className="space-y-3">
+                    {[
+                      "Networking con los principales actores de la industria",
+                      "Acceso a las últimas tendencias y tecnologías del sector",
+                      "Oportunidades de negocio y colaboración",
+                      "Conferencias y talleres con expertos internacionales",
+                      "Exposición de productos y servicios innovadores",
+                    ].map((item, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-slate-700 p-6 rounded-lg">
+                  <h3 className="text-2xl font-bold mb-4 text-center">
+                    Oportunidades de Auspicio
+                  </h3>
+                  <div className="flex justify-center">
+                    <Image
+                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/W-U2RlsalgWwdpwXsX07VCQochQZQ5Pt.jpeg"
+                      alt="Oportunidad de Auspicio - Congreso Internacional Reactivación Petrolera en la Región Piura"
+                      width={600}
+                      height={800}
+                      className="w-full h-auto rounded-lg shadow-lg max-w-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white text-slate-900 p-8 rounded-lg shadow-lg">
+                <h3 className="text-2xl font-bold mb-6 text-center">
+                  Formulario de Inscripción
+                </h3>
+                <RegistrationForm />
+              </div>
+            </div>
+          </div>
+        </section> */}
+
+        {/* ── PATROCINADORES ─────────────────────────────────── */}
+        <section id="patrocinadores" className="page-section">
+          <div className="glow-blob glow-orange absolute bottom-0 right-0 w-[500px] h-[400px] opacity-30" />
+          {/* Marco imagen especial */}
+          <div className="flex justify-center mb-16 px-4">
+            <div className="glass-card p-4 max-w-3xl w-full flex items-center justify-center">
+              <Image
+                src="patrocinio.webp"
+                alt="Patrocinador Especial"
+                width={900}
+                height={400}
+                className="w-full h-auto object-contain rounded-xl"
+              />
+            </div>
+          </div>
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="text-center mb-14">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Alianzas Estratégicas</p>
+              <h2 className="section-title">Patrocinadores del <span>Evento</span></h2>
+              <span className="accent-line" />
+              <p className="section-subtitle mt-5">
+                Empresas líderes que hacen posible ReactivaPetrol 2026.
+              </p>
+            </div>
+
+            <div className="space-y-10">
+              <div>
+                <h3 className="text-center text-xl font-semibold mb-6 text-amber-600">
+                  Crudos Superligeros (54 API)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-center justify-items-center">
+                  {["andesflyer.webp", "gtgflyer.webp", "pandaenergy.webp"].map(
+                    (logo, index) => (
+                      <div
+                        key={index}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-fit max-w-full overflow-hidden group"
+                      >
+                        <Image
+                          src={logo || "/placeholder.svg"}
+                          alt={`Crudos Superligeros ${index + 1}`}
+                          width={480}
+                          height={140}
+                          className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Agregar segunda fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["/ivey.webp", "/axure.webp", "/tema.webp"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 3}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-fit max-w-full overflow-hidden group"
+                      >
+                        <Image
+                          src={logo || "/placeholder.svg"}
+                          alt={
+                            index === 0
+                              ? "Status International Petroleum Group"
+                              : index === 1
+                                ? "Holistic Go"
+                                : "Vice Versa Consulting"
+                          }
+                          width={480}
+                          height={140}
+                          className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Agregar tercera fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["/petrodynamic.webp", "/sins.webp", "/petroperu.jpg"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 3}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-fit max-w-full overflow-hidden group"
+                      >
+                        <Image
+                          src={logo || "/placeholder.svg"}
+                          alt={
+                            index === 0
+                              ? "Status International Petroleum Group"
+                              : index === 1
+                                ? "Holistic Go"
+                                : "Vice Versa Consulting"
+                          }
+                          width={480}
+                          height={140}
+                          className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Agregar cuarta fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["dorfketal.jpg", "slb.jpg", "olympic.jpg"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 3}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-fit max-w-full overflow-hidden group"
+                      >
+                        <Image
+                          src={logo || "/placeholder.svg"}
+                          alt={
+                            index === 0
+                              ? "Status International Petroleum Group"
+                              : index === 1
+                                ? "Holistic Go"
+                                : "Vice Versa Consulting"
+                          }
+                          width={480}
+                          height={140}
+                          className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Agregar quinta fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["cosmos.jpg"].map((logo, index) => (
+                    <div
+                      key={index + 3}
+                      className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-fit max-w-full overflow-hidden group"
+                    >
+                      <Image
+                        src={logo || "/placeholder.svg"}
+                        alt={
+                          index === 0
+                            ? "Status International Petroleum Group"
+                            : index === 1
+                              ? "Holistic Go"
+                              : "Vice Versa Consulting"
+                        }
+                        width={480}
+                        height={140}
+                        className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-center text-xl font-semibold mb-6 text-amber-400">
+                  Crudos Ligeros (42 API)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8 items-center justify-items-center">
+                  {["estrellapetrolera.webp", "rodatech.webp"].map(
+                    (logo, index) => (
+                      <div
+                        key={index}
+                        className="bg-white rounded-lg border-2 border-amber-800 shadow-md hover:shadow-lg transition-all duration-300 w-fit max-w-full overflow-hidden group"
+                      >
+                        <Image
+                          src={logo || "/placeholder.svg"}
+                          alt={`Crudos Ligeros ${index + 1}`}
+                          width={480}
+                          height={140}
+                          className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                          onError={(e) => {
+                            e.currentTarget.src = "/placeholder.svg";
+                          }}
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Segunda fila de patrocinadores Crudos Ligeros */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 items-center justify-items-center mt-6">
+                  {[
+                    "/gotaamarron.jpg",
+                    "/gotaamarron.jpg",
+                    "/gotaamarron.jpg",
+                  ].map((logo, index) => (
+                    <div
+                      key={index + 4}
+                      className="bg-white p-3 rounded-lg border-2 border-amber-800 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[220px] aspect-[3/1.5] flex items-center justify-center overflow-hidden group"
+                    >
+                      <Image
+                        src={logo || "/placeholder.svg"}
+                        width={220}
+                        height={110}
+                        alt={`Crudos Ligeros ${index + 5}`}
+                        className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.svg";
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-center text-xl font-semibold mb-6 text-gray-300">
+                  Crudos Pesados (22 API)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-center justify-items-center">
+                  {[
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/centro1.jpg-nWF1NgHSV4sLjZnoxcj32yLrYtmpaB.jpeg",
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/north.jpg-S6NiYQ1WtmhOY6exa5GwWaQn01wQEy.jpeg",
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-05-24%20at%2012.11.07%20PM-ChEwWMrmx324rxZLyBWWjmQUBoU897.jpeg",
+                  ].map((logo, index) =>
+                    index === 0 ? (
+                      <Link
+                        key={"link-" + index}
+                        href="https://www.facebook.com/CentrodeInvestigacionyDesarrolloCulturalPetrolero/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[200px] aspect-[3/1.5] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-40ebA5ePWKiRCQdO87K188y2O5zyLA.jpeg"
+                          width={200}
+                          height={100}
+                          alt={`Crudos Pesados ${index + 1}`}
+                          className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </Link>
+                    ) : index === 1 ? (
+                      <Link
+                        key={"link-" + index}
+                        href="https://pe.linkedin.com/company/north-oil-services-s.a.c."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[200px] aspect-[3/1.5] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-mfbKDLUDB4bQ7u7djqeG8oJmwO0HVm.jpeg"
+                          width={200}
+                          height={100}
+                          alt="North Oil Services S.A.C."
+                          className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </Link>
+                    ) : index === 2 ? (
+                      <Link
+                        key={"link-" + index}
+                        href="https://www.facebook.com/PetroenergiaEC/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[200px] aspect-[3/1.5] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-tTCiFd56VVdSTZXKn2eYxY96MoZ7iL.jpeg"
+                          width={200}
+                          height={100}
+                          alt="Petroenergía"
+                          className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </Link>
+                    ) : index === 3 ? (
+                      <Link
+                        key={"link-" + index}
+                        href="https://www.youtube.com/@tierraadentroperu"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[200px] aspect-[3/1.5] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-ohX4n0ie5dOnmiSvjNG7XTjtqHryDg.jpeg"
+                          width={200}
+                          height={100}
+                          alt="Tierra Adentro"
+                          className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </Link>
+                    ) : (
+                      <div
+                        key={index}
+                        className="bg-white rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[200px] aspect-[3/1.5] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src="/gotanegra.jpg"
+                          width={200}
+                          height={100}
+                          alt={`Crudos Pesados - Patrocinador ${index + 1}`}
+                          className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Segunda fila de patrocinadores Crudos Pesados */}
+                {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-center justify-items-center mt-6">
+                  {[
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-ZziapayHpXt4TaT5DuEXnbkQW08tRQ.jpeg",
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-ZziapayHpXt4TaT5DuEXnbkQW08tRQ.jpeg",
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-ZziapayHpXt4TaT5DuEXnbkQW08tRQ.jpeg",
+                  ].map((logo, index) => (
+                    <div
+                      key={index + 3}
+                      className="bg-white rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[200px] aspect-[3/1.5] flex items-center justify-center overflow-hidden group"
+                    >
+                      <Image
+                        src="/gotanegra.jpg"
+                        width={200}
+                        height={100}
+                        alt={`Crudos Pesados - Patrocinador ${index + 4}`}
+                        className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div> */}
+                {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-center justify-items-center mt-6">
+                  {[
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-ZziapayHpXt4TaT5DuEXnbkQW08tRQ.jpeg",
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-ZziapayHpXt4TaT5DuEXnbkQW08tRQ.jpeg",
+                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gotanegra.jpg-ZziapayHpXt4TaT5DuEXnbkQW08tRQ.jpeg",
+                  ].map((logo, index) => (
+                    <div
+                      key={index + 6}
+                      className="bg-white rounded-lg border-2 border-black shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[200px] aspect-[3/1.5] flex items-center justify-center overflow-hidden group"
+                    >
+                      <Image
+                        src="/gotanegra.jpg"
+                        width={200}
+                        height={100}
+                        alt={`Crudos Pesados - Patrocinador ${index + 7}`}
+                        className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div> */}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── AUSPICIADORES ──────────────────────────────────── */}
+        <section id="auspiciadores" className="page-section-alt">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Apoyo Institucional</p>
+              <h2 className="section-title">Auspiciadores del <span>Evento</span></h2>
+              <span className="accent-line" />
+              <p className="section-subtitle mt-5">
+                Empresas líderes que hacen posible ReactivaPetrol 2026.
+              </p>
+            </div>
+
+            <div className="space-y-10">
+              <div>
+                <h3 className="text-center text-xl font-semibold mb-6 text-amber-600">
+                  Auspiciadores Crudos Superligeros (54 API)
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center">
+                  {[
+                    "se&vi.webp",
+                    "alpha.webp",
+                    "preco.webp",
+                    "nexell.webp",
+                    "towers.webp",
+                    "transber.webp",
+                  ].map((logo, index) => (
+                    <div
+                      key={index}
+                      className={
+                        index === 0
+                          ? "bg-black rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                          : "bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                      }
+                    >
+                      {index === 0 ? (
+                        <Link
+                          href="https://www.facebook.com/CentrodeInvestigacionyDesarrolloCulturalPetrolero/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full h-full flex items-center justify-center"
+                        >
+                          <Image
+                            src={logo || "/placeholder.svg"}
+                            alt="Panda Energy"
+                            width={280}
+                            height={140}
+                            className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                          />
+                        </Link>
+                      ) : index === 1 ? (
+                        <Link
+                          href="https://www.axuretechnologies.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full h-full flex items-center justify-center"
+                        >
+                          <Image
+                            src={logo || "/placeholder.svg"}
+                            alt="Axure Technologies"
+                            width={280}
+                            height={140}
+                            className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                          />
+                        </Link>
+                      ) : index === 2 ? (
+                        <Link
+                          href="https://cwp.pe/?playlist=504ffb1&video=440aacb"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full h-full flex items-center justify-center"
+                        >
+                          <Image
+                            src={logo || "/placeholder.svg"}
+                            alt="Climber World Peru SAC"
+                            width={280}
+                            height={140}
+                            className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                          />
+                        </Link>
+                      ) : index === 4 ? (
+                        <Link
+                          href="https://preco.com.pe/inicio"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full h-full flex items-center justify-center"
+                        >
+                          <Image
+                            src={logo || "/placeholder.svg"}
+                            alt="PRECO"
+                            width={280}
+                            height={140}
+                            className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                          />
+                        </Link>
+                      ) : index === 5 ? (
+                        <Link
+                          href="https://www.nexellcorporation.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full h-full flex items-center justify-center"
+                        >
+                          <Image
+                            src={logo || "/placeholder.svg"}
+                            alt="Nexell Corporation"
+                            width={280}
+                            height={140}
+                            className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                          />
+                        </Link>
+                      ) : (
+                        <Image
+                          src={logo || "/placeholder.svg"}
+                          alt="Ipha Integral Service"
+                          width={280}
+                          height={140}
+                          className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Segunda fila */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["holisticgo.webp", "viceversa.webp", "powerful.jpg"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 6}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                      >
+                        {index === 1 ? (
+                          <Link
+                            href="https://holisticgoinversiones.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full h-full flex items-center justify-center"
+                          >
+                            <Image
+                              src={logo || "/placeholder.svg"}
+                              alt="Holistic Go"
+                              width={280}
+                              height={140}
+                              className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                            />
+                          </Link>
+                        ) : index === 2 ? (
+                          <Link
+                            href="https://www.viceversaconsulting.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full h-full flex items-center justify-center"
+                          >
+                            <Image
+                              src={logo || "/placeholder.svg"}
+                              alt="Vice Versa Consulting"
+                              width={280}
+                              height={140}
+                              className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                            />
+                          </Link>
+                        ) : (
+                          <Image
+                            src={logo || "/placeholder.svg"}
+                            alt="Status International Petroleum Group"
+                            width={280}
+                            height={140}
+                            className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                          />
+                        )}
+                      </div>
+                    ),
+                  )}
+                </div>
+
+                {/* Tercera fila */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["clinicasanjuan.webp", "usn.webp", "bucanero.webp"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 9}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                      >
+                        {index === 0 ? (
+                          <Link
+                            href="https://clinicasanjuancorp.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full h-full flex items-center justify-center"
+                          >
+                            <Image
+                              src={logo || "/placeholder.svg"}
+                              width={280}
+                              height={140}
+                              alt="Clínica San Juan"
+                              className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                            />
+                          </Link>
+                        ) : index === 2 ? (
+                          <Link
+                            href="https://www.socorrocargoexpress.sce-peru.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full h-full flex items-center justify-center"
+                          >
+                            <Image
+                              src={logo || "/placeholder.svg"}
+                              alt="Socorro Cargo Express"
+                              width={280}
+                              height={140}
+                              className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                            />
+                          </Link>
+                        ) : (
+                          <Image
+                            src={logo || "/placeholder.svg"}
+                            width={280}
+                            height={140}
+                            alt={
+                              index === 1 ? "IVEY" : `Auspiciador ${index + 1}`
+                            }
+                            className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                          />
+                        )}
+                      </div>
+                    ),
+                  )}
+                </div>
+
+                {/* Cuarta fila */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {[
+                    "proactive.webp",
+                    "industrial.webp",
+                    "tdm.webp",
+                    "murgisa.webp",
+                    "zaco.webp",
+                    "ricenergy.jpg",
+                  ].map((logo, index) => (
+                    <div
+                      key={index + 12}
+                      className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                    >
+                      <Image
+                        src={logo || "/placeholder.svg"}
+                        width={280}
+                        height={140}
+                        alt={
+                          index === 0
+                            ? "ProActive"
+                            : index === 1
+                              ? "Industrial Vox Analyzer"
+                              : index === 2
+                                ? "TRANSBER - Soluciones Logísticas Integradas"
+                                : `Auspiciador Crudos Superligeros ${index + 13}`
+                        }
+                        className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
+                {/* Agregar cuarta fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {[
+                    "huascaran.webp",
+                    "vallenorte.webp",
+                    "cwp_welcome.webp",
+                  ].map((logo, index) => (
+                    <div
+                      key={index + 12}
+                      className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                    >
+                      <Image
+                        src={logo || "/placeholder.svg"}
+                        width={280}
+                        height={140}
+                        alt={
+                          index === 0
+                            ? "ProActive"
+                            : index === 1
+                              ? "Industrial Vox Analyzer"
+                              : "TRANSBER - Soluciones Logísticas Integradas"
+                        }
+                        className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
+                {/* Agregar quinta fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["igl.webp", "serfamed.webp", "romero.webp"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 12}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src={logo}
+                          width={280}
+                          height={140}
+                          alt={
+                            index === 0
+                              ? "ProActive"
+                              : index === 1
+                                ? "Industrial Vox Analyzer"
+                                : "TRANSBER - Soluciones Logísticas Integradas"
+                          }
+                          className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Agregar sexta fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["guille.webp", "sanjoseobrero.webp", "idecap.jpg"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 12}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src={logo}
+                          width={280}
+                          height={140}
+                          alt={
+                            index === 0
+                              ? "ProActive"
+                              : index === 1
+                                ? "Industrial Vox Analyzer"
+                                : "TRANSBER - Soluciones Logísticas Integradas"
+                          }
+                          className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Agregar septima fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["diezdediez.jpg", "lpdprod.jpg", "hostalcesar.jpg"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 12}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src={logo}
+                          width={280}
+                          height={140}
+                          alt={
+                            index === 0
+                              ? "ProActive"
+                              : index === 1
+                                ? "Industrial Vox Analyzer"
+                                : "TRANSBER - Soluciones Logísticas Integradas"
+                          }
+                          className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Agregar octava fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {[
+                    "gruposanjose.jpg",
+                    "ruahoteles.jpg",
+                    "transportesrafael.jpg",
+                  ].map((logo, index) => (
+                    <div
+                      key={index + 12}
+                      className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                    >
+                      <Image
+                        src={logo}
+                        width={280}
+                        height={140}
+                        alt={
+                          index === 0
+                            ? "ProActive"
+                            : index === 1
+                              ? "Industrial Vox Analyzer"
+                              : "TRANSBER - Soluciones Logísticas Integradas"
+                        }
+                        className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
+                {/* Agregar novena fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["jcm.jpg", "jcmindustrial.jpg", "vivemas.jpg"].map(
+                    (logo, index) => (
+                      <div
+                        key={index + 12}
+                        className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                      >
+                        <Image
+                          src={logo}
+                          width={280}
+                          height={140}
+                          alt={
+                            index === 0
+                              ? "ProActive"
+                              : index === 1
+                                ? "Industrial Vox Analyzer"
+                                : "TRANSBER - Soluciones Logísticas Integradas"
+                          }
+                          className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                {/* Agregar decima fila con 3 recuadros adicionales */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center mt-6">
+                  {["imi.jpg"].map((logo, index) => (
+                    <div
+                      key={index + 12}
+                      className="bg-white rounded-lg border-2 border-amber-500 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[280px] flex items-center justify-center overflow-hidden group"
+                    >
+                      <Image
+                        src={logo}
+                        width={280}
+                        height={140}
+                        alt={
+                          index === 0
+                            ? "ProActive"
+                            : index === 1
+                              ? "Industrial Vox Analyzer"
+                              : "TRANSBER - Soluciones Logísticas Integradas"
+                        }
+                        className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Media Partners */}
+        <section id="media-partners" className="page-section-alt">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Prensa</p>
+              <h2 className="section-title">Media <span>Partners</span></h2>
+              <span className="accent-line" />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 items-center justify-items-center">
+              {[
+                "tierraadentro.webp",
+                "petroenergia.webp",
+                "northoil.webp",
+                "centroinvest.webp",
+                "spe.webp",
+                "allpawara.webp",
+                "energiaandina.webp",
+                "amppuni.webp",
+                "cntv.webp",
+                "colegio_ing.webp",
+                "institutoperuanoing.webp",
+              ].map((logo, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg border-2 border-gray-300 shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-[340px] flex items-center justify-center overflow-hidden group"
+                >
+                  {/* Condicionales para enlaces personalizados */}
+                  {index === 0 ? (
+                    <Link
+                      href="https://www.facebook.com/tierraadentrope/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full h-full flex items-center justify-center"
+                    >
+                      <Image
+                        src={logo || "/placeholder.svg"}
+                        alt="Tierra Adentro"
+                        width={340}
+                        height={120}
+                        className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.05] transition-transform duration-300"
+                      />
+                    </Link>
+                  ) : index === 1 ? (
+                    <Link
+                      href="https://www.facebook.com/PetroenergiaEC/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full h-full flex items-center justify-center"
+                    >
+                      <Image
+                        src={logo || "/placeholder.svg"}
+                        alt="Petroenergía"
+                        width={240}
+                        height={120}
+                        className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </Link>
+                  ) : index === 6 ? (
+                    <Image
+                      src={logo || "/placeholder.svg"}
+                      alt="ALPAVIRA Revista"
+                      width={240}
+                      height={120}
+                      className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                    />
+                  ) : index === 7 ? (
+                    <Link
+                      href="https://www.facebook.com/RevistaEnergiaAndina/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full h-full flex items-center justify-center"
+                    >
+                      <Image
+                        src={logo || "/placeholder.svg"}
+                        alt={`Media Partner ${index + 1}`}
+                        width={240}
+                        height={120}
+                        className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                      />
+                    </Link>
+                  ) : (
+                    <Image
+                      src={logo || "/placeholder.svg"}
+                      alt={
+                        index === 8
+                          ? "AMPP UNI Student Section - Universidad Nacional de Ingeniería"
+                          : `Media Partner ${index + 1}`
+                      }
+                      width={240}
+                      height={120}
+                      className="w-auto h-auto max-w-full max-h-full object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        {/* Respaldo Gubernamental */}
+        <section id="respaldo-gubernamental" className="page-section">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Institucional</p>
+              <h2 className="section-title">Respaldo <span>Gubernamental</span></h2>
+              <span className="accent-line" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 items-center justify-items-center">
+              {[
+                "/gob_reg_tumbes.webp",
+                "/dir_reg_tumbes.webp",
+                "/gorepiura.webp",
+              ].map((logo, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg border-2 border-blue-700 shadow-md hover:shadow-lg transition-all duration-300 w-fit max-w-full overflow-hidden group"
+                >
+                  <Image
+                    src={logo}
+                    alt={`Respaldo Gubernamental ${index + 1}`}
+                    width={480}
+                    height={140}
+                    className="object-contain group-hover:scale-[1.03] transition-transform duration-300"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        {/* Operaciones Offshore en Marcha */}
+        <section id="offshore" className="page-section-alt">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Video</p>
+              <h2 className="section-title">Operaciones <span>Offshore</span></h2>
+              <span className="accent-line" />
+              <p className="section-subtitle mt-5">
+                Conoce cómo se desarrollan las operaciones offshore en las regiones Piura y Tumbes.
+              </p>
+            </div>
+            <div className="flex flex-col md:flex-row justify-center items-center gap-6">
+              {/* Contenedor para el primer video */}
+              <div className="glass-card p-4 max-w-[380px] w-full flex flex-col items-center">
+                <div className="relative w-[270px] h-[480px] rounded-lg overflow-hidden bg-black flex items-center justify-center">
+                  <iframe
+                    src="op_offshore.webm"
+                    title="Operaciones Offshore en Marcha"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full"
+                  />
+                </div>
+              </div>
+              {/* Contenedor para el segundo video */}
+              <div className="glass-card p-4 max-w-[380px] w-full flex flex-col items-center">
+                <div className="relative w-[270px] h-[480px] rounded-lg overflow-hidden bg-black flex items-center justify-center">
+                  <iframe
+                    src="op_offshore_2.webm"
+                    title="Operaciones Offshore en Marcha 2"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Noticias Petroleras */}
+        <section id="noticias-petroleras" className="page-section">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Actualidad</p>
+              <h2 className="section-title">Noticias <span>Petroleras</span></h2>
+              <span className="accent-line" />
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center gap-6">
+              <div className="glass-card p-4 max-w-xl w-full flex flex-col items-center">
+                <Image
+                  src="/comunicado_1.webp"
+                  alt="Comunicado Petrolero 1"
+                  width={600}
+                  height={400}
+                  className="w-full h-auto object-contain rounded-lg"
+                />
+              </div>
+              <div className="glass-card p-4 max-w-xl w-full flex flex-col items-center">
+                <Image
+                  src="/comunicado_2.jpg"
+                  alt="Comunicado Petrolero 2"
+                  width={600}
+                  height={400}
+                  className="w-full h-auto object-contain rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* TV Video */}
+        <section id="tv-video" className="page-section-alt">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <p className="text-[12px] uppercase tracking-[0.2em] text-amber-400 font-semibold mb-3">Entrevista Exclusiva</p>
+              <h2 className="section-title">TierraAdentro con <span>Oscar Díaz</span></h2>
+              <span className="accent-line" />
+            </div>
+            <div className="flex justify-center items-center gap-6">
+              {/* Contenedor para el video */}
+              <div className="glass-card p-4 max-w-[420px] w-full flex flex-col items-center">
+                <div className="relative w-[360px] h-[640px] rounded-lg overflow-hidden bg-black flex items-center justify-center">
+                  <iframe
+                    src="tv_video.webm"
+                    title="TierraAdentro con Oscar Diaz"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Footer */}
+        <footer className="bg-[#040810] border-t border-white/5 text-white py-10 sm:py-14">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {/* Logo y descripción */}
+              <div className="lg:col-span-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-amber-400 shadow-md">
+                    <Image
+                      src="/oil-pump-logo.png"
+                      alt="Reactiva-Petrol 2025 Logo"
+                      width={48}
+                      height={48}
+                      className="object-cover"
+                    />
+                  </div>
+                  <span className="text-xl font-bold tracking-tight">
+                    Reactiva-Petrol <span className="text-amber-500">2026</span>
+                  </span>
+                </div>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  El evento más importante del sector petrolero en
+                  Latinoamérica.
+                </p>
+              </div>
+
+              {/* Enlaces Rápidos */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link
+                      href="#acerca"
+                      className="text-gray-300 hover:text-amber-500 transition-colors text-sm"
+                    >
+                      Acerca del Evento
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#ponentes"
+                      className="text-gray-300 hover:text-amber-500 transition-colors text-sm"
+                    >
+                      Ponentes
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#agenda"
+                      className="text-gray-300 hover:text-amber-500 transition-colors text-sm"
+                    >
+                      Agenda
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#patrocinadores"
+                      className="text-gray-300 hover:text-amber-500 transition-colors text-sm"
+                    >
+                      Patrocinadores
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#inscripcion"
+                      className="text-gray-300 hover:text-amber-500 transition-colors text-sm"
+                    >
+                      Inscripción
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#contacto"
+                      className="text-gray-300 hover:text-amber-500 transition-colors text-sm"
+                    >
+                      Contacto
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Información de contacto */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Contacto</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-gray-300 text-sm">
+                      Centro de Convenciones, Talara - Perú
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-300 text-sm">933685901</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-300 text-sm">
+                      info@reactivapetrol.online
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Suscripción */}
+              {/* <div>
+                <h3 className="text-lg font-semibold mb-4">Suscríbete</h3>
+                <p className="text-gray-300 text-sm mb-4">
+                  Recibe actualizaciones sobre el evento y la industria
+                  petrolera.
+                </p>
+                <form className="space-y-3">
+                  <input
+                    type="email"
+                    placeholder="Tu correo electrónico"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-sm"
+                  />
+                  <Button className="w-full bg-amber-600 hover:bg-amber-700 text-sm">
+                    Enviar
+                  </Button>
+                </form>
+              </div> */}
+            </div>
+
+            {/* Copyright */}
+            <div className="border-t border-slate-800 mt-12 pt-8">
+              <p className="text-center text-gray-400 text-sm">
+                © 2025 Reactiva-Petrol 2025. Todos los derechos reservados.
+              </p>
+            </div>
+          </div>
+        </footer>
       </main>
     </div>
   );
